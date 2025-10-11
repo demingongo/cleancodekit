@@ -87,19 +87,19 @@ const PARSERS = [
         ],
         src: 'src',
         extensions: [
-            'mjs',
-            'js'
+            'mts',
+            'ts'
         ]
     },
     {
         name: 'commonjs',
-        display: 'CommonJS (deprecated)',
+        display: 'CommonJS',
         emoji: '📦',
         color: colors.red,
         dependencies: [],
         src: '',
         extensions: [
-            'mjs',
+            'cjs',
             'js'
         ]
     }
@@ -245,52 +245,124 @@ async function init() {
 
     // vscode settings
     try {
-        if (!fs.existsSync(path.resolve(
-            projectRoot,
-            '.vscode'
-        ))) {
-            fs.cpSync(path.resolve(
-                templatesDir,
-                '.vscode',
-                'settings.json'
-            ), path.resolve(
-                projectRoot,
-                '.vscode',
-                'settings.json'
-            ), { recursive: true })
-        } else {
-            const templateSettings = await import(pathToFileURL(path.resolve(
-                templatesDir,
-                '.vscode',
-                'settings.json'
-            )), { with: { type: "json" } })
-            const settings = await import(pathToFileURL(path.resolve(
-                projectRoot,
-                '.vscode',
-                'settings.json'
-            )), { with: { type: "json" } })
-            const result = { ...templateSettings.default, ...settings.default }
-
-            fs.writeFileSync(path.join(
-                projectRoot,
-                '.vscode',
-                'settings.json'
-            ), JSON.stringify(result, null, '    '), 'utf8');
-        }
+        await setUpVSCode(
+            templatesDir,
+            projectRoot
+        );
     } catch (_err) {
         //
     }
 
     // eslint settings
+    await setUpESLint(
+        templatesDir,
+        projectRoot,
+        parserObject.name
+    );
+
+    // prettier settings
+    await setUpPrettier(
+        templatesDir,
+        projectRoot
+    );
+
+    // lint-staged settings
+    await setUpLintStaged(
+        templatesDir,
+        projectRoot,
+        parserObject.src,
+        parserObject.extensions
+    );
+
+    // husky settings
+    try {
+        await setUpHusky(
+            templatesDir,
+            projectRoot
+        );
+    } catch (_err) {
+        //
+    }
+
+    prompts.outro('Done.')
+}
+
+//#endregion init
+
+//#region setup
+
+/**
+ * 
+ * @param {string} templatesDir 
+ * @param {string} projectRoot 
+ */
+async function setUpVSCode(
+    templatesDir,
+    projectRoot
+) {
+    if (!fs.existsSync(path.resolve(
+        projectRoot,
+        '.vscode'
+    ))) {
+        fs.cpSync(path.resolve(
+            templatesDir,
+            '.vscode',
+            'settings.json'
+        ), path.resolve(
+            projectRoot,
+            '.vscode',
+            'settings.json'
+        ), { recursive: true })
+    } else {
+        const templateSettings = await import(pathToFileURL(path.resolve(
+            templatesDir,
+            '.vscode',
+            'settings.json'
+        )), { with: { type: "json" } })
+        const settings = await import(pathToFileURL(path.resolve(
+            projectRoot,
+            '.vscode',
+            'settings.json'
+        )), { with: { type: "json" } })
+        const result = { ...templateSettings.default, ...settings.default }
+
+        fs.writeFileSync(path.join(
+            projectRoot,
+            '.vscode',
+            'settings.json'
+        ), JSON.stringify(result, null, '    '), 'utf8');
+    }
+}
+
+/**
+ * 
+ * @param {string} templatesDir 
+ * @param {string} projectRoot 
+ * @param {string} parserName 
+ */
+async function setUpESLint(
+    templatesDir,
+    projectRoot,
+    parserName
+) {
     fs.cpSync(path.resolve(
         templatesDir,
-        `eslint.config.${parserObject.name}.mjs`
+        `eslint.config.${parserName}.mjs`
     ), path.resolve(
         projectRoot,
         'eslint.config.mjs'
     ), { recursive: true })
+}
 
-    // prettier settings
+/**
+ * 
+ * @param {string} templatesDir
+ * @param {string} projectRoot
+ */
+async function setUpPrettier(
+    templatesDir,
+    projectRoot
+) {
     fs.cpSync(path.resolve(
         templatesDir,
         'prettier.config.mts'
@@ -312,8 +384,21 @@ async function init() {
         projectRoot,
         '.env.format'
     ), { recursive: true });
+}
 
-    // lint-staged settings
+/**
+ * 
+ * @param {string} templatesDir 
+ * @param {string} projectRoot 
+ * @param {string} parserSrc 
+ * @param {string[]} parserExtensions 
+ */
+async function setUpLintStaged(
+    templatesDir,
+    projectRoot,
+    parserSrc,
+    parserExtensions
+) {
     if (!fs.existsSync(path.resolve(
         projectRoot,
         'lint-staged.config.mts'
@@ -324,34 +409,37 @@ async function init() {
             'lint-staged.config.mts'
         ), 'utf8')
 
-        const extensions = parserObject.extensions.join(',')
+        const extensions = parserExtensions.join(',')
         const updatedLintStagedContent = lintStagedContent
-            .replace(/<src>/, parserObject.src ? `${parserObject.src}/` : '')
-            .replace(/<extensions>/, parserObject.extensions.length > 1 ? `{${extensions}}` : extensions);
+            .replace(/<src>/, parserSrc ? `${parserSrc}/` : '')
+            .replace(/<extensions>/, parserExtensions.length > 1 ? `{${extensions}}` : extensions);
 
         fs.writeFileSync(path.resolve(
             projectRoot,
             'lint-staged.config.mts'
         ), updatedLintStagedContent, 'utf8');
     }
-
-    // husky settings
-    try {
-        fs.cpSync(path.resolve(
-            templatesDir,
-            '.husky'
-        ), path.resolve(
-            projectRoot,
-            '.husky'
-        ), { recursive: true })
-    } catch (_err) {
-        //
-    }
-
-    prompts.outro('Done.')
 }
 
-//#endregion init
+/**
+ * 
+ * @param {string} templatesDir
+ * @param {string} projectRoot
+ */
+async function setUpHusky(
+    templatesDir,
+    projectRoot
+) {
+    fs.cpSync(path.resolve(
+        templatesDir,
+        '.husky'
+    ), path.resolve(
+        projectRoot,
+        '.husky'
+    ), { recursive: true })
+}
+
+//#endregion setup
 
 //#region utils
 
@@ -409,16 +497,16 @@ function pkgFromUserAgent(userAgent) {
 }
 
 function supportsEmoji() {
-  const isWindows = process.platform === 'win32';
-  const isCI = !!process.env.CI;
-  const term = process.env.TERM || '';
-  const colorterm = process.env.COLORTERM || '';
+    const isWindows = process.platform === 'win32';
+    const isCI = !!process.env.CI;
+    const term = process.env.TERM || '';
+    const colorterm = process.env.COLORTERM || '';
 
-  return (
-    !isCI &&
-    (process.stdout.isTTY || process.env.FORCE_COLOR) &&
-    (term.includes('xterm') || colorterm.includes('truecolor') || !isWindows)
-  );
+    return (
+        !isCI &&
+        (process.stdout.isTTY || process.env.FORCE_COLOR) &&
+        (term.includes('xterm') || colorterm.includes('truecolor') || !isWindows)
+    );
 }
 
 

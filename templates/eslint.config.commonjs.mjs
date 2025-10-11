@@ -19,7 +19,7 @@ export default defineConfig([
     { ignores: ['lib/', 'dist/', 'build/', 'coverage/', '.husky/', 'assets/'] },
     {
         extends: [...compat.extends('eslint:recommended')],
-        files: ['{src,test}/**/*.js'],
+        files: ['**/*.{js,cjs}'],
 
         plugins: {
             '@stylistic': stylisticJs
@@ -34,7 +34,6 @@ export default defineConfig([
         },
 
         rules: {
-            'no-empty': 'warn',
             'no-unused-vars': [
                 'warn',
                 {

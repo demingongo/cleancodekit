@@ -20,7 +20,7 @@ export default defineConfig([
     { ignores: ['lib/', 'dist/', 'build/', 'coverage/', '.husky/', 'assets/'] },
     {
         extends: [...compat.extends('eslint:recommended', 'plugin:import/recommended')],
-        files: ['{src,test}/**/*.{js,mjs}'],
+        files: ['**/*.{js,mjs}'],
 
         plugins: {
             '@stylistic': stylisticJs,
@@ -36,12 +36,8 @@ export default defineConfig([
         },
 
         rules: {
-            'import/no-commonjs': 'off', // if using eslint-plugin-import
-            'import/named': 'off', // remove if you don't want to use 'module.exports' anymore
-            'import/default': 'off', // same as above
-            'no-empty': 'warn',
             'no-unused-vars': [
-                'error',
+                'warn',
                 {
                     argsIgnorePattern: '^_',
                     caughtErrorsIgnorePattern: '^_',
