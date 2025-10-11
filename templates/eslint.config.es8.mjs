@@ -36,6 +36,7 @@ export default defineConfig([
         },
 
         rules: {
+            'import/no-cycle': ['error', { maxDepth: Infinity }],
             'no-unused-vars': [
                 'warn',
                 {

@@ -55,7 +55,8 @@ export default defineConfig([
                     caughtErrorsIgnorePattern: '^_',
                     varsIgnorePattern: '^_'
                 }
-            ]
+            ],
+            'import/no-cycle': ['error', { maxDepth: Infinity }],
         },
 
         settings: {

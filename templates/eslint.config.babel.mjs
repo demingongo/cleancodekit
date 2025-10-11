@@ -41,6 +41,7 @@ export default defineConfig([
             'import/no-commonjs': 'off', // because using eslint-plugin-import
             'import/named': 'off', // remove if you don't want to use 'module.exports' anymore
             'import/default': 'off', // same as above
+            'import/no-cycle': ['error', { maxDepth: Infinity }],
             'no-empty': 'warn',
             'no-unused-vars': [
                 'warn',
