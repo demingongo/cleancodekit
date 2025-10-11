@@ -78,7 +78,6 @@ const PARSERS = [
         emoji: '🛡️ ',
         color: colors.cyan,
         dependencies: [
-            '@babel/cli',
             '@typescript-eslint/eslint-plugin',
             '@typescript-eslint/parser',
             'eslint-import-resolver-typescript',
