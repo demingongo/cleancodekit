@@ -1,0 +1,33 @@
+{
+  "name": "cleancodekit",
+  "version": "0.0.1",
+  "type": "module",
+  "description": "Your one-stop setup tool for clean, consistent, and professional codebases.",
+  "main": "index.js",
+  "bin": {
+    "cleancodekit": "index.js"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "jsonc-parser": "^3.3.1",
+    "mri": "^1.2.0",
+    "picocolors": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "eslint",
+    "prettier",
+    "lint-staged",
+    "code-style"
+  ],
+  "author": "demingongo",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^24.7.1"
+  }
+}
