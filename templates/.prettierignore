@@ -3,5 +3,8 @@ lib
 dist
 .husky
 coverage
-pnpm-lock.yaml
-package-lock.json
+
+# to ignore package.json, pnpm-lock.yaml, ...
+/*.json
+/*.yaml
+/*.yml
