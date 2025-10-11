@@ -16,9 +16,16 @@ import { applyEdits, findNodeAtLocation, modify, parseTree } from 'jsonc-parser'
 const argv = mri(process.argv.slice(2), {
     alias: { h: 'help', p: 'parser', m: 'mocha' },
     boolean: ['help', 'mocha'],
-    string: ['parser'],
+    string: ['parser', 'package-manager'],
 })
 const cwd = process.cwd()
+
+const VALID_PACKAGE_MANAGERS = [
+    'bun',
+    'npm',
+    'pnpm',
+    'yarn'
+]
 
 //#region dependencies
 
@@ -125,20 +132,29 @@ const helpMessage = `\
   Usage: cleancodekit [OPTION]...
   
   Options:
-    -m, --mocha                install dependencies for Mocha test framework
-    -p, --parser NAME          use a specific parser
+    -m, --mocha                     install dependencies for Mocha test framework
+    -p, --parser NAME               use a specific parser
+    --package-manager NAME          use a specific package manager
 
 
   Available parsers:
     ${PARSERS[0].color(PARSERS[0].name)}
     ${PARSERS[1].color(PARSERS[1].name)}
-    ${PARSERS[2].color(PARSERS[2].name)}`
+    ${PARSERS[2].color(PARSERS[2].name)}
+    ${PARSERS[3].color(PARSERS[3].name)}
+    
+  Available package managers:
+    ${VALID_PACKAGE_MANAGERS[0]}
+    ${VALID_PACKAGE_MANAGERS[1]}
+    ${VALID_PACKAGE_MANAGERS[2]}
+    ${VALID_PACKAGE_MANAGERS[3]}`
 
 //#endregion helper message
 
 //#region init
 
 async function init() {
+    const argPackageManager = argv['package-manager']
     const argParser = argv.template
     const argMocha = argv.mocha
     const isEmojiSupported = supportsEmoji()
@@ -175,8 +191,26 @@ async function init() {
         if (prompts.isCancel(parserObject)) return cancel()
     }
 
+    // 2. Choose a package manager
+    let pkgManager = pkgInfo ? pkgInfo.name : 'npm'
+    if (argPackageManager) {
+        if (!VALID_PACKAGE_MANAGERS.includes(argPackageManager)) {
+            pkgManager = await prompts.select({
+                message: `"${argPackageManager}" isn't a valid package manager. Please choose from below: `,
+                options: VALID_PACKAGE_MANAGERS.map((pm) => {
+                    return {
+                        label: pm,
+                        value: pm,
+                    }
+                }),
+            })
+            if (prompts.isCancel(pkgManager)) return cancel()
+        } else {
+            pkgManager = argPackageManager
+        }
+    }
+
     const projectRoot = path.join(cwd)
-    const pkgManager = pkgInfo ? pkgInfo.name : 'npm'
     const templatesDir = path.resolve(
         fileURLToPath(import.meta.url),
         '..',
@@ -185,7 +219,7 @@ async function init() {
 
     prompts.log.step(`Scaffolding project in ${projectRoot}...`)
 
-    // 2. Install dependencies
+    // 3. Install dependencies
     let addPkgsCommand = ''
     switch (pkgManager) {
         case 'yarn':
@@ -212,7 +246,7 @@ async function init() {
         throw error
     }
 
-    // 3. Edit package.json (scripts)
+    // 4. Edit package.json (scripts)
     const pkgJsonContent = fs.readFileSync(path.resolve(
         projectRoot,
         'package.json'
