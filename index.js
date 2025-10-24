@@ -68,8 +68,8 @@ const PARSERS = [
         ]
     },
     {
-        name: 'es8',
-        display: 'ECMAScript 2017',
+        name: 'es2022',
+        display: 'ECMAScript 2022',
         emoji: '📜',
         color: colors.blue,
         dependencies: [],
@@ -207,6 +207,25 @@ async function init() {
             if (prompts.isCancel(pkgManager)) return cancel()
         } else {
             pkgManager = argPackageManager
+        }
+    } else {
+        const installedPackageManagers = [];
+        for (const pm of VALID_PACKAGE_MANAGERS) {
+            if (!await executeCommand(`${pm} --version`)) {
+                installedPackageManagers.push(pm)
+            }
+        }
+        if (installedPackageManagers.length > 1) {
+            pkgManager = await prompts.select({
+                message: 'Select a package manager:',
+                options: installedPackageManagers.map((pm) => {
+                    return {
+                        label: pm,
+                        value: pm,
+                    }
+                }),
+            })
+            if (prompts.isCancel(pkgManager)) return cancel()
         }
     }
 

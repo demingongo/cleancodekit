@@ -1,6 +1,6 @@
 {
   "name": "cleancodekit",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Your one-stop setup tool for clean, consistent, and professional codebases.",
   "main": "index.js",
@@ -28,6 +28,6 @@
   "author": "demingongo",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^24.7.1"
+    "@types/node": "^24.9.1"
   }
 }

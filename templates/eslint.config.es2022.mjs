@@ -1,12 +1,14 @@
+// eslint-disable-next-line import/no-unresolved
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import js from '@eslint/js';
 import { FlatCompat } from '@eslint/eslintrc';
-import stylisticJs from '@stylistic/eslint-plugin'
 import importPlugin from 'eslint-plugin-import';
 import eslintConfigPrettier from 'eslint-config-prettier/flat';
+
+const stylisticJs = await import('@stylistic/eslint-plugin')
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,7 +33,7 @@ export default defineConfig([
             globals: {
                 ...globals.node,
             },
-            ecmaVersion: 8,
+            ecmaVersion: 2022,
             sourceType: 'module',
         },
 
