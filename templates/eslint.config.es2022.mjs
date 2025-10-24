@@ -1,21 +1,21 @@
+import { FlatCompat } from '@eslint/eslintrc';
+import js from '@eslint/js';
+import eslintConfigPrettier from 'eslint-config-prettier/flat';
+import importPlugin from 'eslint-plugin-import';
 // eslint-disable-next-line import/no-unresolved
 import { defineConfig } from 'eslint/config';
 import globals from 'globals';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import js from '@eslint/js';
-import { FlatCompat } from '@eslint/eslintrc';
-import importPlugin from 'eslint-plugin-import';
-import eslintConfigPrettier from 'eslint-config-prettier/flat';
 
-const stylisticJs = await import('@stylistic/eslint-plugin')
+const stylisticJs = await import('@stylistic/eslint-plugin');
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const compat = new FlatCompat({
     baseDirectory: __dirname,
     recommendedConfig: js.configs.recommended,
-    allConfig: js.configs.all
+    allConfig: js.configs.all,
 });
 
 export default defineConfig([
@@ -26,7 +26,7 @@ export default defineConfig([
 
         plugins: {
             '@stylistic': stylisticJs,
-            import: importPlugin
+            import: importPlugin,
         },
 
         languageOptions: {
@@ -44,11 +44,11 @@ export default defineConfig([
                 {
                     argsIgnorePattern: '^_',
                     caughtErrorsIgnorePattern: '^_',
-                    varsIgnorePattern: '^_'
-                }
+                    varsIgnorePattern: '^_',
+                },
             ],
             '@stylistic/quotes': ['error', 'single'],
-            '@stylistic/quote-props': ['error', 'as-needed']
+            '@stylistic/quote-props': ['error', 'as-needed'],
         },
         settings: {
             'import/resolver': {
@@ -56,7 +56,7 @@ export default defineConfig([
                     extensions: ['.js', '.mjs'],
                 },
             },
-        }
+        },
     },
-    eslintConfigPrettier
+    eslintConfigPrettier,
 ]);
