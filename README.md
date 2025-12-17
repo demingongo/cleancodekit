@@ -5,7 +5,7 @@
 # 🧼 cleancodekit
 
 <!-- Project Metadata -->
-![version](https://img.shields.io/badge/version-0.0.1-blue?style=flat-square)
+![version](https://img.shields.io/badge/version-0.0.2-blue?style=flat-square)
 ![License](https://img.shields.io/github/license/demingongo/cleancodekit?style=flat-square)
 ![Issues](https://img.shields.io/github/issues/demingongo/cleancodekit?style=flat-square)
 
@@ -16,7 +16,7 @@
 ![Configures lint-staged](https://img.shields.io/badge/configures-lint--staged-FF5733?style=flat-square&logo=git&logoColor=white)
 
 **Your one-stop setup tool for clean, consistent, and professional codebases.**  
-Automates the installation and configuration of ESLint, Prettier, Husky, and more—so you can focus on writing great code, not fiddling with configs.
+Automates the installation and configuration of ESLint, Prettier, Husky, and more so you can focus on writing great code, not fiddling with configs.
 
 ---
 
@@ -67,7 +67,6 @@ After running `cleancodekit`, your project will include:
 ```
 .husky/
 .vscode/
-.env.format
 .prettierignore
 eslint.config.mjs
 lint-staged.config.mts

@@ -30,12 +30,12 @@ const VALID_PACKAGE_MANAGERS = [
 //#region dependencies
 
 const DEV_DEPENDENCIES = [
-    '@dotenvx/dotenvx',
     '@eslint/eslintrc',
     '@eslint/js',
     '@stylistic/eslint-plugin',
     '@trivago/prettier-plugin-sort-imports',
     '@types/node',
+    'cross-env',
     'eslint',
     'eslint-config-prettier',
     'eslint-plugin-import',
@@ -273,17 +273,17 @@ async function init() {
     let updatedPkgJsonContent = editJsonContent(
         pkgJsonContent,
         ['scripts', 'format'],
-        'dotenvx run -f .env.format -- lint-staged'
+        `cross-env NODE_OPTIONS=--experimental-strip-types prettier --write ./${parserObject.src}`
     );
     updatedPkgJsonContent = editJsonContent(
         updatedPkgJsonContent,
         ['scripts', 'format:check'],
-        `dotenvx run -f .env.format -- prettier --check ./${parserObject.src}`
+        `cross-env NODE_OPTIONS=--experimental-strip-types prettier --check ./${parserObject.src}`
     );
     updatedPkgJsonContent = editJsonContent(
         updatedPkgJsonContent,
-        ['scripts', 'format:write'],
-        `dotenvx run -f .env.format -- prettier --write ./${parserObject.src}`
+        ['scripts', 'format:staged'],
+        'cross-env NODE_OPTIONS=--experimental-strip-types lint-staged'
     );
     updatedPkgJsonContent = editJsonContent(
         updatedPkgJsonContent,
@@ -428,13 +428,6 @@ async function setUpPrettier(
     ), path.resolve(
         projectRoot,
         '.prettierignore'
-    ), { recursive: true });
-    fs.cpSync(path.resolve(
-        templatesDir,
-        '.env.format'
-    ), path.resolve(
-        projectRoot,
-        '.env.format'
     ), { recursive: true });
 }
 
