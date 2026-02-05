@@ -155,7 +155,7 @@ const helpMessage = `\
 
 async function init() {
     const argPackageManager = argv['package-manager']
-    const argParser = argv.template
+    const argParser = argv.parser
     const argMocha = argv.mocha
     const isEmojiSupported = supportsEmoji()
 
@@ -178,7 +178,7 @@ async function init() {
     if (!parserObject) {
         parserObject = await prompts.select({
             message: hasInvalidArgParser
-                ? `"${argTemplate}" isn't a valid parser. Please choose from below: `
+                ? `"${argParser}" isn't a valid parser. Please choose from below: `
                 : 'Select a parser:',
             options: PARSERS.map((p) => {
                 const parserColor = p.color
