@@ -31,12 +31,12 @@ const VALID_PACKAGE_MANAGERS = [
 
 const DEV_DEPENDENCIES = [
     '@eslint/eslintrc',
-    '@eslint/js',
+    '@eslint/js@^9',
     '@stylistic/eslint-plugin',
     '@trivago/prettier-plugin-sort-imports',
     '@types/node',
     'cross-env',
-    'eslint',
+    'eslint@^9',
     'eslint-config-prettier',
     'eslint-plugin-import',
     'globals',
