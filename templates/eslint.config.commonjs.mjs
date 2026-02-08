@@ -16,7 +16,7 @@ const compat = new FlatCompat({
 });
 
 export default defineConfig([
-    { ignores: ['lib/', 'dist/', 'build/', 'coverage/', '.husky/', 'assets/'] },
+    { ignores: ['lib/', 'dist/', 'build/', 'coverage/', '.husky/', 'assets/', 'docs/'] },
     {
         extends: [...compat.extends('eslint:recommended')],
         files: ['**/*.{js,cjs}'],
